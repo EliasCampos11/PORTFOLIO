@@ -9,3 +9,9 @@ def produto_detail(request, id):
     obj = get_object_or_404(Produto, id=id)
     serializer = ProdutoSerializer(obj)
     return JsonResponse(serializer.data)
+
+def produto_list(request):
+    # Lógica para obter a lista de produtos
+    qs = Produto.objects.all()
+    serializer = ProdutoSerializer(qs, many=True)
+    return JsonResponse(serializer.data, safe=False)
