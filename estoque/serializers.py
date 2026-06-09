@@ -1,10 +1,41 @@
 from rest_framework import serializers
 
+from estoque.models import Produto
 
-class ProdutoSerializer(serializers.Serializer):
-    nome = serializers.CharField(max_length=100)
-    modelo = serializers.CharField(max_length=100)
-    quantidade_estoque = serializers.IntegerField()
-    quantidade_vendido = serializers.IntegerField()
-    notas_usuario = serializers.DecimalField(max_digits=3, decimal_places=2, default=0.0)
-    valor = serializers.DecimalField(max_digits=10, decimal_places=2)
+
+class ProdutoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Produto
+        fields = ['id', 'nome', 'modelo', 'quantidade_estoque', 'quantidade_vendido', 'notas_usuario', 'valor']   
+
+    def validate_quantidade_estoque(self, value):
+        if value < 0:
+            raise serializers.ValidationError("A quantidade no estoque não pode ser menor que zero")
+        return value
+
+    def validate_valor(self, value):
+        if value < 0:
+            raise serializers.ValidationError("O valor do pruduto não pode ser menor que zero")
+        return value
+
+    def create(self, validated_data):
+        
+        produto = Produto.objects.create(
+            nome = validated_data["nome"],
+            modelo =  validated_data["modelo"],
+            quantidade_estoque =  validated_data["quantidade_estoque"],
+            valor =  validated_data["valor"],
+        )
+
+
+        return produto
+
+    def update(self, instance, validated_data):
+        instance.nome = validated_data.get("nome",instance.nome)
+        instance.modelo = validated_data.get("modelo", instance.modelo)
+        instance.quantidade_estoque = validated_data.get("quantidade_vendido",instance.quantidade_estoque)
+        instance.valor = validated_data.get("valor",instance.valor)
+        instance.save()
+
+        return instance
