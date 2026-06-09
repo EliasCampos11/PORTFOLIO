@@ -4,7 +4,7 @@ from estoque.views import produto_detail, produto_list
 
 urlpatterns = [
     path('produtos/', produto_list),
-    path('produto/<int:id>/', produto_detail),
+    path('produtos/<int:id>/', produto_detail),
 ]
 
 

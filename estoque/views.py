@@ -2,16 +2,42 @@ from django.shortcuts import get_object_or_404
 from estoque.models import Produto
 from estoque.serializers import ProdutoSerializer
 from django.http import JsonResponse
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 #Create your views here.
+@api_view(http_method_names=['GET', 'PATCH', 'DELETE'])
 def produto_detail(request, id):
+    obj = get_object_or_404(Produto, id=id) 
+    if request.method == 'GET':
     # Lógica para obter os detalhes do produto com base no ID
-    obj = get_object_or_404(Produto, id=id)
-    serializer = ProdutoSerializer(obj)
-    return JsonResponse(serializer.data)
+        serializer = ProdutoSerializer(obj)
+        return JsonResponse(serializer.data)
+    if request.method == 'PATCH':
+        serializer = ProdutoSerializer(obj, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=200) 
+        return JsonResponse(serializer.errors, status=400)
+    if request.method == 'DELETE':
+        serializer = ProdutoSerializer(data=request.data, partial=True)
+        if serializer.is_valid():
+            validated_data = serializer.validated_data 
+            obj.produto_disponivel = False
+            obj.save()
+        return Response(validated_data, status=204)
 
+@api_view(http_method_names=['GET', 'POST'])
 def produto_list(request):
     # Lógica para obter a lista de produtos
-    qs = Produto.objects.all()
-    serializer = ProdutoSerializer(qs, many=True)
-    return JsonResponse(serializer.data, safe=False)
+    if request.method == 'GET':
+        qs = Produto.objects.filter(produto_disponivel=True)
+        serializer = ProdutoSerializer(qs, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    if request.method == 'POST':
+        data = request.data
+        serializer = ProdutoSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
