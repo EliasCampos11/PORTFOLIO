@@ -1,9 +1,9 @@
 from django.urls import path
 from django.conf.urls import include
-from estoque.views import produto_detail, produto_list
+from estoque.views import ProdutoList, produto_detail
 
 urlpatterns = [
-    path('produtos/', produto_list),
+    path('produtos/', ProdutoList.as_view()),
     path('produtos/<int:id>/', produto_detail),
 ]
 

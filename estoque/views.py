@@ -2,8 +2,9 @@ from django.shortcuts import get_object_or_404
 from estoque.models import Produto
 from estoque.serializers import ProdutoSerializer
 from django.http import JsonResponse
-from rest_framework.decorators import api_view
+from rest_framework.decorators import APIView, api_view
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 #Create your views here.
 @api_view(http_method_names=['GET', 'PATCH', 'DELETE'])
@@ -27,17 +28,17 @@ def produto_detail(request, id):
             obj.save()
         return Response(validated_data, status=204)
 
-@api_view(http_method_names=['GET', 'POST'])
-def produto_list(request):
-    # Lógica para obter a lista de produtos
-    if request.method == 'GET':
+class ProdutoList(APIView):
+    def get(self, request): 
         qs = Produto.objects.filter(produto_disponivel=True)
         serializer = ProdutoSerializer(qs, many=True)
         return JsonResponse(serializer.data, safe=False)
-    if request.method == 'POST':
+    
+    def post(self, request): 
         data = request.data
         serializer = ProdutoSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
+        
