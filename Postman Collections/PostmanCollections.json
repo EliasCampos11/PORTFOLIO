@@ -1,0 +1,107 @@
+{
+	"info": {
+		"_postman_id": "9abbcaee-1453-4faf-a08b-fcbb89a032a5",
+		"name": "Portifolio",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Estoque",
+			"item": [
+				{
+					"name": "Listar Produtos",
+					"id": "6e046875-3911-46d9-b0d7-1f0b58e87ba0",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{portivolio}}/api/produtos/"
+					},
+					"response": []
+				},
+				{
+					"name": "Exibir Produto",
+					"id": "23463c32-0abc-46a5-9d9f-1d7b46c22213",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{portivolio}}/api/produto/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Produto",
+					"id": "e1c202cd-3b90-4842-8cfe-897898d45285",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"nome\": \"TV\",\n\"modelo\": \"Samsung Smart TV 55 UHD 4K U8600F 2025\",\n\"quantidade_estoque\": 15,\n\"valor\": 3000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{portivolio}}/api/produtos/"
+					},
+					"response": []
+				},
+				{
+					"name": "Editar Produto",
+					"id": "6aef9ddf-c76e-470c-90ab-1ff576e86211",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"quantidade_estoque\": 10,\n\"valor\": 3000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{portivolio}}/api/produto/5/"
+					},
+					"response": []
+				},
+				{
+					"name": "Excluir Produto",
+					"id": "e4bc6eaa-c1e2-4419-81a9-023aac9840b6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\n        \"valor\": \"90.00\"\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{portivolio}}/api/produto/1/"
+					},
+					"response": []
+				}
+			],
+			"id": "1987699b-1e87-4278-a42e-f8b40d2da575"
+		}
+	]
+}
