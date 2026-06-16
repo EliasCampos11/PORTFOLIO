@@ -34,7 +34,7 @@ class ProdutoSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.nome = validated_data.get("nome",instance.nome)
         instance.modelo = validated_data.get("modelo", instance.modelo)
-        instance.quantidade_estoque = validated_data.get("quantidade_vendido",instance.quantidade_estoque)
+        instance.quantidade_estoque = validated_data.get("quantidade_estoque",instance.quantidade_estoque)
         instance.valor = validated_data.get("valor",instance.valor)
         instance.save()
 
