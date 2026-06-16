@@ -3,9 +3,11 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework.decorators import api_view
 from rest_framework.response  import Response
+from rest_framework.views import APIView
 
 from estoque.models import Produto
 from estoque.serializers import ProdutoSerializer
+
 
 
 @api_view(http_method_names=["GET","PATCH", "DELETE"])
@@ -25,14 +27,13 @@ def produto_detail(request, id):
         obj.save()
         return Response(status=204)
 
-
-@api_view(http_method_names=["GET","POST"])
-def produtos_list(request):
-    if request.method == "GET":
+class ProdutosList(APIView):
+    def get(self, request):
         qs = Produto.objects.filter(disponivel_produto=True)
         serializer = ProdutoSerializer(qs, many=True)
         return JsonResponse(serializer.data, safe=False)
-    if request.method == "POST":
+    
+    def post(self, request):
         data = request.data
         serializer = ProdutoSerializer(data=data)
         if serializer.is_valid():
