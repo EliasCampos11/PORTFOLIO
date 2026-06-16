@@ -2,6 +2,8 @@ from django.db import models
 
 # Create your models here.
 class Produto(models.Model):
+
+    vendedor = models.ForeignKey('auth.User', related_name="produtos", on_delete=models.CASCADE )
     nome = models.CharField(max_length=100)
     modelo = models.CharField(max_length=100)
     quantidade_estoque = models.IntegerField()
