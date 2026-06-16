@@ -8,21 +8,24 @@ from rest_framework.views import APIView
 from estoque.models import Produto
 from estoque.serializers import ProdutoSerializer
 
+class ProdutoDetail(APIView ):
+     
+    def get_obj(self,id):
+        return get_object_or_404(Produto, id=id)
 
-
-@api_view(http_method_names=["GET","PATCH", "DELETE"])
-def produto_detail(request, id):
-    obj = get_object_or_404(Produto, id=id)
-    if request.method == "GET":
+    def get(self, request,id):
+        obj = self.get_obj(id=id)
         serializer = ProdutoSerializer(obj)
         return JsonResponse(serializer.data)
-    if request.method == "PATCH":
+    def patch(self, request,id):
+        obj = self.get_obj(id=id)
         serializer = ProdutoSerializer(obj, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data, status=200)
         return JsonResponse(serializer.errors, status=400)
-    if request.method == "DELETE":
+    def delete(self, request,id):
+        obj = self.get_obj(id=id)
         obj.disponivel_produto = False
         obj.save()
         return Response(status=204)
