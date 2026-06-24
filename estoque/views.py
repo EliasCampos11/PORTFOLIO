@@ -29,7 +29,6 @@ class IsVendedor(permissions.BasePermission):
         if obj.vendedor == request.user:
             return True
         return False
-    
 
 
 class ProdutoDetail( generics.RetrieveUpdateDestroyAPIView):
