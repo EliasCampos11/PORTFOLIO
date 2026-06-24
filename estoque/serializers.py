@@ -1,10 +1,31 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 
+from estoque.models import Produto
 
-class ProdutoSerializer(serializers.Serializer):
-    nome = serializers.CharField(max_length=100)
-    modelo = serializers.CharField(max_length=100)
-    quantidade_estoque = serializers.IntegerField()
-    quantidade_vendido = serializers.IntegerField()
-    notas_usuario = serializers.DecimalField(max_digits=3, decimal_places=2, default=0.0)
-    valor = serializers.DecimalField(max_digits=10, decimal_places=2)
+
+class ProdutoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Produto
+        exclude = ["disponivel_produto"]
+
+
+    vendedor = serializers.CharField()
+
+    def validate_vendedor(self, value):
+        try:
+            vendedor_obj = User.objects.get(username=value)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("usuario não existe")
+        return vendedor_obj
+
+    def validate_quantidade_estoque(self, value):
+        if value < 0:
+            raise serializers.ValidationError("A quantidade no estoque não pode ser menor que zero")
+        return value
+
+    def validate_valor(self, value):
+        if value < 0:
+            raise serializers.ValidationError("O valor do pruduto não pode ser menor que zero")
+        return value
