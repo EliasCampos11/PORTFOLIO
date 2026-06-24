@@ -28,7 +28,7 @@ class TestListamgemdeProdutos(APITestCase):
             "valor": 3000,
             "vendedor": "Jonas"
             }
-
+            
         self.client.post("/api/produtos/",dados)
         reponse = self.client.get("/api/produtos/?username=Jonas")
         data = json.loads(reponse.content)
