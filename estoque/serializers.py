@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from estoque.models import Produto
@@ -7,7 +8,17 @@ class ProdutoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Produto
-        fields = ['id', 'nome', 'modelo', 'quantidade_estoque', 'quantidade_vendido', 'notas_usuario', 'valor']   
+        exclude = ["disponivel_produto"]
+
+
+    vendedor = serializers.CharField()
+
+    def validate_vendedor(self, value):
+        try:
+            vendedor_obj = User.objects.get(username=value)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("usuario não existe")
+        return vendedor_obj
 
     def validate_quantidade_estoque(self, value):
         if value < 0:
@@ -18,24 +29,3 @@ class ProdutoSerializer(serializers.ModelSerializer):
         if value < 0:
             raise serializers.ValidationError("O valor do pruduto não pode ser menor que zero")
         return value
-
-    def create(self, validated_data):
-        
-        produto = Produto.objects.create(
-            nome = validated_data["nome"],
-            modelo =  validated_data["modelo"],
-            quantidade_estoque =  validated_data["quantidade_estoque"],
-            valor =  validated_data["valor"],
-        )
-
-
-        return produto
-
-    def update(self, instance, validated_data):
-        instance.nome = validated_data.get("nome",instance.nome)
-        instance.modelo = validated_data.get("modelo", instance.modelo)
-        instance.quantidade_estoque = validated_data.get("quantidade_estoque",instance.quantidade_estoque)
-        instance.valor = validated_data.get("valor",instance.valor)
-        instance.save()
-
-        return instance
